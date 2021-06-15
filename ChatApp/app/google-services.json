@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306246406557",
+    "project_id": "chatapp-ee6e5",
+    "storage_bucket": "chatapp-ee6e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306246406557:android:b160dc4da9436ac0ec5f74",
+        "android_client_info": {
+          "package_name": "com.arimbimega.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306246406557-jqua0pvrg7pg45onrnj4bcrk40gp7610.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXz0B3ynxZcnrOqpbYzQXdH-8hQt5965o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306246406557-jqua0pvrg7pg45onrnj4bcrk40gp7610.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
