@@ -14,13 +14,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
+    public MyFirebaseMessagingService() {
+        super();
+    }
+
     @Override
     public void onNewToken( String token) {
         super.onNewToken(token);
 
         Log.d(TAG, "Refreshed token: " + token);
 
-        //Log.d(TAG, "Get Token : " + token);
     }
 
     @Override
