@@ -3,14 +3,17 @@ package com.arimbimega.chatapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.arimbimega.chatapp.Adapter.MessageAdapter;
 import com.arimbimega.chatapp.Model.Message;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,8 +34,13 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView show_message;
-    Button btn_send;
+    ImageButton btn_send;
+    EditText typeMessage;
+    String pesan;
+
+    MessageAdapter messageAdapter;
+    RecyclerView recyclerView;
+
 
 
     private static final String TAG = "MainActivity";
@@ -42,10 +50,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.testing);
+        setContentView(R.layout.activity_main);
 
-        show_message = findViewById(R.id.tv_pesan_masuk);
-        btn_send = findViewById(R.id.btn_send_testing);
+        btn_send = findViewById(R.id.btn_send);
+        typeMessage = findViewById(R.id.type_text);
+
+        recyclerView = findViewById(R.id.recyclerview_chat);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         //manggil realtime database
         mDatabaseReference = FirebaseDatabase.getInstance("https://chatapp-ee6e5-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
@@ -87,16 +101,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessageToDatabase();
+                typeMessage.setText("");
             }
         });
-
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessageToDatabase();
-            }
-        });
-
         readFromDatabase();
 
     }
@@ -107,13 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
         //tanggal
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
         String date_format = dateFormat.format(date);
 
+        pesan = typeMessage.getText().toString().trim();
         HashMap<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("sender", "Pradyanti");
         hashMap.put("receiver", "Arimbi");
-        hashMap.put("message", "pesan masuk");
+        hashMap.put("message", pesan);
         hashMap.put("time_stamp", date_format);
 
         myRef.push().setValue(hashMap);
@@ -129,19 +137,27 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
 
                 Message message = snapshot.getValue(Message.class);
-                Log.d(TAG, "onChildAdded: " + message.getTime_stamp());
-                Log.d(TAG, "onChildAdded: " + message.getSender());
-                Log.d(TAG, "onChildAdded: " + message.getReceiver());
-                Log.d(TAG, "onChildAdded: " + message.getMessage());
+//                Log.d(TAG, "onChildAdded: " + message.getTime_stamp());
+//                Log.d(TAG, "onChildAdded: " + message.getSender());
+//                Log.d(TAG, "onChildAdded: " + message.getReceiver());
+//                Log.d(TAG, "onChildAdded: " + message.getMessage());
 
                 messageArrayList.add(message);
 
-                String pesan = "";
-                for ( int i = 0; i < messageArrayList.size(); i ++) {
-                    pesan += messageArrayList.get(i).getMessage() + " " + messageArrayList.get(i).getTime_stamp() + "\n";
+                ArrayList<Message> pesanArrayList = new ArrayList<>();
+                for (int i = 0; i < messageArrayList.size(); i++) {
+                    pesanArrayList.add(messageArrayList.get(i));
                 }
 
-                show_message.setText(pesan);
+                messageAdapter = new MessageAdapter(pesanArrayList);
+                recyclerView.setAdapter(messageAdapter);
+
+//                String pesan = "";
+//                for ( int i = 0; i < messageArrayList.size(); i ++) {
+//                    pesan += messageArrayList.get(i).getMessage() + " " + messageArrayList.get(i).getTime_stamp() + "\n";
+//                }
+//
+//                show_message.setText(pesan);
             }
 
             @Override
