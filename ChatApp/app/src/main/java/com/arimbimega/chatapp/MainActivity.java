@@ -108,13 +108,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void sendMessageToDatabase() {
 
         DatabaseReference myRef = mDatabaseReference.child("Chats");
 
         //tanggal
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String date_format = dateFormat.format(date);
 
         pesan = typeMessage.getText().toString().trim();
