@@ -9,11 +9,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_chat"
-        android:layout_width="match_parent"
-        android:layout_height="657dp"
-        android:padding="16dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:stackFromEnd="true"
+        android:layout_alignBottom="@+id/text_input"
+        android:layout_marginBottom="77dp"
+        android:paddingHorizontal="16dp" />
 
     <RelativeLayout
+        android:id="@+id/text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
@@ -21,12 +25,12 @@
         android:layout_alignParentBottom="true">
 
         <EditText
-            android:id="@+id/type_message"
+            android:id="@+id/type_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/btn_send"
             android:background="@android:color/transparent"
-            android:hint="Type a message . . ." />
+            android:hint="Type a message" />
 
         <ImageButton
             android:layout_width="40dp"
