@@ -7,28 +7,28 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/background_left">
+        android:background="@drawable/background_left"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/show_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:padding="8dp"
             android:text="hello"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:padding="8dp"/>
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/show_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jam"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:text="Jam"
+            android:textColor="@color/text_color"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

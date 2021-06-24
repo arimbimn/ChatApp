@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         if ( !task.isSuccessful()) {
                             Log.d(TAG, "Failed to subscribe topic: " + topic + task.getException());
                             return;
-                        } else if (task.isComplete()) {
-
                         }
 
                         String msg = "Success to subscribe " + topic;

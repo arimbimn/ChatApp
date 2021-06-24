@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#dcdcdc"
+    android:background="#ebf2f2"
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -12,15 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:stackFromEnd="true"
-        android:layout_alignBottom="@+id/text_input"
-        android:layout_marginBottom="77dp"
-        android:paddingHorizontal="16dp" />
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="4dp"
+        android:layout_above="@+id/text_input"/>
 
     <RelativeLayout
         android:id="@+id/text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="10dp"
         android:background="@color/white"
         android:layout_alignParentBottom="true">
 
@@ -28,8 +28,11 @@
             android:id="@+id/type_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/btn_send"
             android:background="@android:color/transparent"
+            android:textSize="16sp"
             android:hint="Type a message" />
 
         <ImageButton
