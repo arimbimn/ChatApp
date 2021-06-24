@@ -28,18 +28,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ListView
     public static final int MSG_TYPE_RIGHT = 1;
 
     ArrayList<Message> messageArrayList;
+    String token;
 
-    public MessageAdapter(ArrayList<Message> messageArrayList) {
+    public MessageAdapter(ArrayList<Message> messageArrayList, String token) {
         this.messageArrayList = messageArrayList;
+        this.token = token;
     }
 
     @NonNull
     @NotNull
     @Override
     public MessageAdapter.ListViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_left, parent, false);
-//        return new ListViewHolder(view);
 
         if(viewType == MSG_TYPE_RIGHT) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_right, parent, false);
@@ -77,20 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ListView
 
     @Override
     public int getItemViewType(int position) {
-        Task<String> getTokenDevice1 = FirebaseMessaging.getInstance().getToken();
-        while (!getTokenDevice1.isComplete());
-        String tokenDevice1 = getTokenDevice1.getResult();
-
-        Log.d("Token Device ", tokenDevice1);
-
-        Task<String> getTokenDevice2 = FirebaseMessaging.getInstance().getToken();
-        while (!getTokenDevice2.isComplete());
-        String tokenDevice2 = getTokenDevice2.getResult();
-
-        Log.d("Token Device ", tokenDevice2);
-
-        if(tokenDevice1.equals(tokenDevice1)){
-            //messageArrayList.get(position).getSender();
+        if(messageArrayList.get(position).getSender().equals(token)){
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_lEFT;

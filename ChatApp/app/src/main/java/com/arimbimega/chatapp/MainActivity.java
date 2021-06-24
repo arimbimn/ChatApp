@@ -9,12 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arimbimega.chatapp.Adapter.MessageAdapter;
 import com.arimbimega.chatapp.Model.Message;
+import com.arimbimega.chatapp.Notification.ApiClient;
+import com.arimbimega.chatapp.Notification.Data;
+import com.arimbimega.chatapp.Notification.MyRequest;
+import com.arimbimega.chatapp.Notification.MyResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -32,16 +38,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageButton btn_send;
     EditText typeMessage;
     String pesan;
+//    TextView show_message;
+//    Button btn_send;
+    String topic = "news";
+    String token;
 
     MessageAdapter messageAdapter;
     RecyclerView recyclerView;
-
-
 
     private static final String TAG = "MainActivity";
     DatabaseReference mDatabaseReference;
@@ -54,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         btn_send = findViewById(R.id.btn_send);
         typeMessage = findViewById(R.id.type_text);
+//        btn_send = findViewById(R.id.btn_send_testing);
+//        show_message = findViewById(R.id.tv_pesan_masuk);
 
         recyclerView = findViewById(R.id.recyclerview_chat);
         recyclerView.setHasFixedSize(true);
@@ -63,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         //manggil realtime database
         mDatabaseReference = FirebaseDatabase.getInstance("https://chatapp-ee6e5-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
-
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -75,13 +88,12 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         //Get new FCM Token
-                        String token = task.getResult();
+                        token = task.getResult();
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
                     }
                 });
 
-        String topic = "news";
         FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -89,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                         if ( !task.isSuccessful()) {
                             Log.d(TAG, "Failed to subscribe topic: " + topic + task.getException());
                             return;
+                        } else if (task.isComplete()) {
+
                         }
 
                         String msg = "Success to subscribe " + topic;
@@ -101,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessageToDatabase();
+                sendNotification(pesan);
                 typeMessage.setText("");
             }
         });
@@ -108,23 +123,51 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void sendMessageToDatabase() {
 
         DatabaseReference myRef = mDatabaseReference.child("Chats");
 
         //tanggal
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String date_format = dateFormat.format(date);
 
         pesan = typeMessage.getText().toString().trim();
         HashMap<String, String> hashMap = new HashMap<String, String>();
-        hashMap.put("sender", "Pradyanti");
+        hashMap.put("sender", token);
         hashMap.put("receiver", "Arimbi");
         hashMap.put("message", pesan);
         hashMap.put("time_stamp", date_format);
 
         myRef.push().setValue(hashMap);
+
+    }
+
+    public void sendNotification(String pesan) {
+
+        Data data = new Data("New Message", "" + pesan);
+        MyRequest myRequest = new MyRequest("/topics/" + topic, data);
+
+        ApiClient.apiInterface().sendNotificationMessage(myRequest)
+                .enqueue(new Callback<MyResponse>() {
+                    @Override
+                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                        if (!response.isSuccessful()) {
+                            Log.d(TAG, "onResponse: Gagal respon " + response.code());
+                            Log.d(TAG, "onResponse: Message " + response.message());
+                            return;
+                        }
+
+                        Log.d(TAG, "onResponse: Sukses respon " + response.code());
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
 
     }
 
@@ -149,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
                     pesanArrayList.add(messageArrayList.get(i));
                 }
 
-                messageAdapter = new MessageAdapter(pesanArrayList);
+
+                messageAdapter = new MessageAdapter(pesanArrayList, token);
                 recyclerView.setAdapter(messageAdapter);
 
 //                String pesan = "";
