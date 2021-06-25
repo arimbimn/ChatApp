@@ -17,10 +17,12 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+import java.util.Random;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static String TAG = MyFirebaseMessagingService.class.getSimpleName();
-    public static final int NOTIFY_ID = 0;
     public static final String CHANNEL_ID = "Channel_ID";
 
     public MyFirebaseMessagingService() {
@@ -60,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = CHANNEL_ID;
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -75,8 +77,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.getActivity(this, 0, notficationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
 
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
+        int id = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        notificationManager.notify(id, notificationBuilder.build());
     }
 
 }

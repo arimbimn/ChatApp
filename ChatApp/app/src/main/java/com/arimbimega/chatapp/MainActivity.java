@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btn_send;
     EditText typeMessage;
     String pesan;
-    //    TextView show_message;
+//    TextView show_message;
 //    Button btn_send;
-    String topic = "news";
+    String topic = "college";
     String token;
 
     MessageAdapter messageAdapter;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        String msg = "Success to subscribe " + topic;
+                        String msg = "Success to subscribe topic " + topic;
                         Log.d(TAG, msg);
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 typeMessage.setText("");
             }
         });
+
         readFromDatabase();
 
     }
@@ -126,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseReference myRef = mDatabaseReference.child("Chats");
 
-        //tanggal
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String date_format = dateFormat.format(date);
@@ -189,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < messageArrayList.size(); i++) {
                     pesanArrayList.add(messageArrayList.get(i));
                 }
-
 
                 messageAdapter = new MessageAdapter(pesanArrayList, token);
                 recyclerView.setAdapter(messageAdapter);
